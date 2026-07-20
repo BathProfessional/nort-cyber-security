@@ -78,13 +78,20 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-5">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
             <a
               href="tel:+18888283691"
               className="font-display text-sm tracking-wider text-neon hover:text-cyan-neon transition-colors"
               data-cursor="hover"
             >
               (888) 828-3691
+            </a>
+            <a
+              href="mailto:nortcybersecurity@gmail.com"
+              className="font-mono text-xs sm:text-sm tracking-wide text-cyan-neon/80 hover:text-cyan-neon transition-colors"
+              data-cursor="hover"
+            >
+              nortcybersecurity@gmail.com
             </a>
             {/* Social glyphs */}
             <div className="flex items-center gap-3">
