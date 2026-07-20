@@ -37,6 +37,30 @@ export default function Contact() {
             Transmit credentials through encrypted channels. Our command team
             responds within one grid cycle.
           </p>
+          <a
+            href="tel:+18888283691"
+            className="mt-6 inline-flex items-center gap-3 px-5 py-3 rounded-xl glass-panel border border-cyan-neon/40 hover:border-cyan-neon/70 hover:shadow-neon-sm transition-all duration-300 group"
+            data-cursor="hover"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-cyan-neon/30 bg-cyan-neon/10 text-cyan-neon shadow-[0_0_12px_rgba(0,240,255,0.35)] group-hover:shadow-[0_0_18px_rgba(0,240,255,0.55)] transition-shadow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path
+                  d="M6.5 4.5h3l1.5 4-2 1.5a12 12 0 0 0 5.5 5.5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A14.5 14.5 0 0 1 4.5 6.5a2 2 0 0 1 2-2Z"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span className="text-left">
+              <span className="block font-mono text-[10px] tracking-[0.3em] text-cyan-neon/50 uppercase">
+                Direct Line
+              </span>
+              <span className="block font-display text-lg md:text-xl font-bold tracking-wider text-neon">
+                (888) 828-3691
+              </span>
+            </span>
+          </a>
           <div className="mt-4 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-cyan-neon to-transparent" />
         </motion.div>
 

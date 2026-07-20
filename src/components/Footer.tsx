@@ -78,19 +78,28 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Social glyphs */}
-          <div className="flex items-center gap-3">
-            {SOCIALS.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                className="w-10 h-10 rounded-lg border border-cyan-neon/25 flex items-center justify-center font-mono text-xs text-cyan-neon/70 hover:text-cyan-neon hover:border-cyan-neon/60 hover:shadow-neon-sm transition-all duration-300"
-                data-cursor="hover"
-                aria-label={s.label}
-              >
-                {s.label}
-              </a>
-            ))}
+          <div className="flex flex-col sm:flex-row items-center gap-5">
+            <a
+              href="tel:+18888283691"
+              className="font-display text-sm tracking-wider text-neon hover:text-cyan-neon transition-colors"
+              data-cursor="hover"
+            >
+              (888) 828-3691
+            </a>
+            {/* Social glyphs */}
+            <div className="flex items-center gap-3">
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  className="w-10 h-10 rounded-lg border border-cyan-neon/25 flex items-center justify-center font-mono text-xs text-cyan-neon/70 hover:text-cyan-neon hover:border-cyan-neon/60 hover:shadow-neon-sm transition-all duration-300"
+                  data-cursor="hover"
+                  aria-label={s.label}
+                >
+                  {s.label}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
 
