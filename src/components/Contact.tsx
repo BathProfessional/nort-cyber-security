@@ -3,16 +3,60 @@
 import { useRef, useState, FormEvent } from "react";
 import { motion, useInView } from "framer-motion";
 
+const CONTACT_EMAIL = "nortcybersecurity@gmail.com";
+
 export default function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const [status, setStatus] = useState<"idle" | "charging" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "charging" | "sent" | "error">("idle");
   const [focused, setFocused] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("charging");
-    setTimeout(() => setStatus("sent"), 1800);
+    setErrorMsg("");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    // Route submissions to nortcybersecurity@gmail.com via FormSubmit
+    data.append("_subject", "Nort Cyber Security — New Secure Uplink");
+    data.append("_template", "table");
+    data.append("_captcha", "false");
+    data.append("_replyto", String(data.get("email") || ""));
+
+    try {
+      const res = await fetch(
+        `https://formsubmit.co/ajax/${CONTACT_EMAIL}`,
+        {
+          method: "POST",
+          body: data,
+          headers: { Accept: "application/json" },
+        }
+      );
+
+      const json = (await res.json().catch(() => ({}))) as {
+        success?: string | boolean;
+        message?: string;
+      };
+
+      if (!res.ok || json.success === false || json.success === "false") {
+        throw new Error(json.message || "Transmission failed");
+      }
+
+      // Brief charge animation, then success
+      await new Promise((r) => setTimeout(r, 600));
+      setStatus("sent");
+      form.reset();
+    } catch (err) {
+      setStatus("error");
+      setErrorMsg(
+        err instanceof Error
+          ? err.message
+          : "Uplink failed. Try again or call (888) 828-3691."
+      );
+    }
   };
 
   return (
@@ -134,8 +178,16 @@ export default function Contact() {
                 Uplink Confirmed
               </h3>
               <p className="font-mono text-xs text-cyan-neon/60 tracking-wider">
-                TRANSMISSION SECURED · AWAITING HANDSHAKE
+                TRANSMISSION SECURED · SENT TO {CONTACT_EMAIL.toUpperCase()}
               </p>
+              <button
+                type="button"
+                onClick={() => setStatus("idle")}
+                className="mt-8 font-mono text-[10px] tracking-widest text-cyan-neon/50 hover:text-cyan-neon uppercase transition-colors"
+                data-cursor="hover"
+              >
+                Send Another Transmission
+              </button>
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
@@ -197,6 +249,12 @@ export default function Contact() {
                 )}
               </div>
 
+              {status === "error" && (
+                <p className="font-mono text-xs text-magenta-hot tracking-wide text-center">
+                  {errorMsg || "Uplink failed. Call (888) 828-3691."}
+                </p>
+              )}
+
               <button
                 type="submit"
                 disabled={status === "charging"}
@@ -212,6 +270,8 @@ export default function Contact() {
                     />
                     Charging Transmission…
                   </span>
+                ) : status === "error" ? (
+                  "Retry Transmission"
                 ) : (
                   "Transmit Securely"
                 )}
