@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /**
- * High-performance Tron-blue digital rain.
- * Optimized for 60fps: no shadowBlur, capped DPR, sparse columns, precomputed colors.
+ * Tron-blue digital rain with sharper, denser letter trails.
+ * Full glyph streams (not sparse samples) — still 60fps friendly.
  */
 export default function HeroMatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,42 +23,50 @@ export default function HeroMatrixRain() {
     let running = true;
     let w = 0;
     let h = 0;
-    let fontSize = 15;
-    let colStep = 18;
+    let fontSize = 16;
+    let colStep = 16;
     let last = 0;
+    let frame = 0;
 
     type Col = {
       y: number;
       speed: number;
-      len: number;
-      head: number; // glyph index for head
+      chars: string[];
       blue: boolean;
+      bright: number; // 0-1 head intensity
     };
 
     let columns: Col[] = [];
 
-    // Compact glyph set — faster random
+    // Richer glyph set — katakana + hex + symbols for cooler streams
     const glyphs =
-      "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789";
+      "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ" +
+      "0123456789ABCDEF<>[]{}|/\\$#@%&*+=:;";
     const gLen = glyphs.length;
-    const randG = () => glyphs[(Math.random() * gLen) | 0];
+    const pick = () => glyphs[(Math.random() * gLen) | 0];
 
-    // Precomputed colors (avoid string alloc every glyph)
-    const HEAD = "#E8FCFF";
+    const HEAD = "#FFFFFF";
+    const HEAD_GLOW = "#B8F8FF";
     const CYAN = "#00F0FF";
-    const CYAN_MID = "rgba(0,240,255,0.55)";
-    const CYAN_TAIL = "rgba(0,160,200,0.22)";
     const BLUE = "#3DA9FF";
-    const BLUE_MID = "rgba(0,136,255,0.5)";
-    const BLUE_TAIL = "rgba(0,80,180,0.2)";
+
+    const makeCol = (spawnY?: number): Col => {
+      const len = 12 + ((Math.random() * 18) | 0);
+      return {
+        y: spawnY ?? Math.random() * (h / fontSize + 10),
+        speed: 0.55 + Math.random() * 0.95,
+        chars: Array.from({ length: len }, pick),
+        blue: Math.random() > 0.5,
+        bright: 0.7 + Math.random() * 0.3,
+      };
+    };
 
     const resize = () => {
       const parent = canvas.parentElement;
       if (!parent) return;
 
       const mobile = window.innerWidth < 768 || "ontouchstart" in window;
-      // Cap DPR hard for smooth 60fps
-      const dpr = mobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.25);
+      const dpr = mobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.35);
 
       w = parent.clientWidth;
       h = parent.clientHeight;
@@ -68,25 +76,18 @@ export default function HeroMatrixRain() {
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      fontSize = mobile ? 14 : 16;
-      colStep = mobile ? 22 : 18; // fewer columns = smoother
+      // Slightly larger glyphs = more readable / premium
+      fontSize = mobile ? 15 : 17;
+      colStep = mobile ? 18 : 15;
       const cols = Math.ceil(w / colStep) + 1;
-
-      columns = Array.from({ length: cols }, () => ({
-        y: Math.random() * (h / fontSize),
-        speed: 0.65 + Math.random() * 1.1,
-        len: 8 + ((Math.random() * 16) | 0),
-        head: (Math.random() * gLen) | 0,
-        blue: Math.random() > 0.55,
-      }));
+      columns = Array.from({ length: cols }, () => makeCol());
 
       ctx.fillStyle = "#000";
       ctx.fillRect(0, 0, w, h);
-      ctx.font = `600 ${fontSize}px "Courier New", monospace`;
       ctx.textBaseline = "top";
+      ctx.textAlign = "center";
     };
 
-    // Debounced resize
     let resizeTimer = 0;
     const onResize = () => {
       window.clearTimeout(resizeTimer);
@@ -96,7 +97,6 @@ export default function HeroMatrixRain() {
     resize();
     window.addEventListener("resize", onResize, { passive: true });
 
-    // Pause when tab hidden
     const onVis = () => {
       if (document.hidden) {
         cancelAnimationFrame(raf);
@@ -112,61 +112,90 @@ export default function HeroMatrixRain() {
       if (!running) return;
       raf = requestAnimationFrame(loop);
 
-      // Cap ~60fps, skip if tab lag spikes
       const dt = now - last;
-      if (dt < 14) return; // ~70fps max work
+      if (dt < 15) return;
       last = now;
+      frame++;
 
-      // Trail fade
-      ctx.fillStyle = "rgba(0,0,0,0.065)";
+      // Longer trails
+      ctx.fillStyle = "rgba(0,0,0,0.055)";
       ctx.fillRect(0, 0, w, h);
 
-      ctx.font = `600 ${fontSize}px "Courier New", monospace`;
+      // Clean mono face
+      ctx.font = `700 ${fontSize}px "JetBrains Mono", "Courier New", monospace`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
 
+      const step = Math.min(dt / 16.67, 2);
       const n = columns.length;
+
       for (let i = 0; i < n; i++) {
         const col = columns[i];
-        const x = i * colStep;
-        const yPx = col.y * fontSize;
+        const x = i * colStep + colStep * 0.5;
+        const len = col.chars.length;
 
-        // Head only — bright tip (fake glow: draw twice)
-        const headChar = glyphs[col.head];
-        ctx.fillStyle = HEAD;
-        ctx.fillText(headChar, x, yPx);
-        ctx.globalAlpha = 0.45;
-        ctx.fillStyle = col.blue ? BLUE : CYAN;
-        ctx.fillText(headChar, x, yPx);
-        ctx.globalAlpha = 1;
-
-        // Trail — 3 samples only (not full length) for speed + cool look
-        const mid = (col.len * 0.35) | 0;
-        const far = col.len - 1;
-
-        ctx.fillStyle = col.blue ? BLUE : CYAN;
-        ctx.fillText(randG(), x, yPx - fontSize);
-
-        if (mid > 1) {
-          ctx.fillStyle = col.blue ? BLUE_MID : CYAN_MID;
-          ctx.fillText(randG(), x, yPx - mid * fontSize);
+        // Mutate a few trail glyphs (Matrix shimmer)
+        if (frame % 2 === 0) {
+          const mut = 1 + ((Math.random() * 2) | 0);
+          for (let m = 0; m < mut; m++) {
+            const idx = 1 + ((Math.random() * (len - 1)) | 0);
+            col.chars[idx] = pick();
+          }
         }
 
-        ctx.fillStyle = col.blue ? BLUE_TAIL : CYAN_TAIL;
-        ctx.fillText(randG(), x, yPx - far * fontSize);
+        for (let j = 0; j < len; j++) {
+          const yy = (col.y - j) * fontSize;
+          if (yy < -fontSize || yy > h) continue;
 
-        // Advance
-        col.y += col.speed * Math.min(dt / 16.67, 2);
+          const ch = col.chars[j];
+          const t = j / len; // 0 head → 1 tail
 
-        // Occasionally flash head glyph
-        if (((now / 16) | 0) % 3 === 0) {
-          col.head = (Math.random() * gLen) | 0;
+          if (j === 0) {
+            // Bright white head + soft cyan underglow (2 draws, no shadowBlur)
+            ctx.globalAlpha = col.bright;
+            ctx.fillStyle = HEAD;
+            ctx.fillText(ch, x, yy);
+            ctx.globalAlpha = 0.5 * col.bright;
+            ctx.fillStyle = HEAD_GLOW;
+            ctx.fillText(ch, x + 0.5, yy);
+            ctx.globalAlpha = 0.35;
+            ctx.fillStyle = col.blue ? BLUE : CYAN;
+            ctx.fillText(ch, x, yy);
+            ctx.globalAlpha = 1;
+          } else if (j === 1) {
+            ctx.globalAlpha = 0.95;
+            ctx.fillStyle = col.blue ? "#7CC8FF" : "#5CFFFF";
+            ctx.fillText(ch, x, yy);
+            ctx.globalAlpha = 1;
+          } else if (t < 0.35) {
+            ctx.globalAlpha = 0.85 - t;
+            ctx.fillStyle = col.blue ? BLUE : CYAN;
+            ctx.fillText(ch, x, yy);
+            ctx.globalAlpha = 1;
+          } else if (t < 0.7) {
+            ctx.globalAlpha = 0.55 - (t - 0.35) * 0.6;
+            ctx.fillStyle = col.blue
+              ? "rgba(0,120,220,1)"
+              : "rgba(0,180,200,1)";
+            ctx.fillText(ch, x, yy);
+            ctx.globalAlpha = 1;
+          } else {
+            ctx.globalAlpha = Math.max(0.08, 0.28 - (t - 0.7) * 0.5);
+            ctx.fillStyle = col.blue
+              ? "rgba(0,60,140,1)"
+              : "rgba(0,100,120,1)";
+            ctx.fillText(ch, x, yy);
+            ctx.globalAlpha = 1;
+          }
         }
 
-        if ((col.y - col.len) * fontSize > h) {
-          col.y = -(2 + Math.random() * 20);
-          col.speed = 0.65 + Math.random() * 1.15;
-          col.len = 8 + ((Math.random() * 16) | 0);
-          col.blue = Math.random() > 0.55;
-          col.head = (Math.random() * gLen) | 0;
+        col.y += col.speed * step;
+
+        // Head glyph flickers
+        if (frame % 2 === 0) col.chars[0] = pick();
+
+        if ((col.y - len) * fontSize > h) {
+          columns[i] = makeCol(-(2 + Math.random() * 18));
         }
       }
     };
@@ -187,11 +216,7 @@ export default function HeroMatrixRain() {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 z-[1] pointer-events-none"
-      style={{
-        background: "#000",
-        contain: "strict",
-        willChange: "contents",
-      }}
+      style={{ background: "#000", contain: "strict" }}
       aria-hidden
     />
   );

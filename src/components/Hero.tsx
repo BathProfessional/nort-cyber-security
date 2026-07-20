@@ -145,58 +145,49 @@ export default function Hero() {
       </div>
 
       {/* Side HUD */}
-      <div className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-[6] hidden md:flex flex-col gap-1.5 font-mono text-[10px] tracking-widest text-cyan-neon/50 pointer-events-none select-none">
+      <div className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-[6] hidden md:flex flex-col gap-1.5 font-mono text-[10px] tracking-[0.2em] text-cyan-neon/55 pointer-events-none select-none hero-hud">
         <span>GRID://MAIN</span>
         <span>SECTOR_01</span>
-        <span className="text-cyan-neon font-semibold">SHIELD_ONLINE</span>
+        <span className="text-cyan-neon font-bold tracking-[0.25em]">SHIELD_ONLINE</span>
         <span>UPLINK_SECURE</span>
-        <span className="mt-2 text-cyan-neon/90 hero-blink">▌STREAM_ACTIVE</span>
+        <span className="mt-2 text-cyan-neon hero-blink font-semibold">▌STREAM_ACTIVE</span>
       </div>
-      <div className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-[6] hidden md:flex flex-col gap-1.5 items-end font-mono text-[10px] tracking-widest text-cyan-neon/50 pointer-events-none select-none">
+      <div className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-[6] hidden md:flex flex-col gap-1.5 items-end font-mono text-[10px] tracking-[0.2em] text-cyan-neon/55 pointer-events-none select-none hero-hud">
         <span>LATENCY 0.4ms</span>
         <span>NODES 12,847</span>
-        <span className="text-cyan-neon font-semibold">DEFENSE_MESH</span>
+        <span className="text-cyan-neon font-bold tracking-[0.25em]">DEFENSE_MESH</span>
         <span>∞ SECURE</span>
-        <span className="mt-2 text-cyan-neon/90 hero-blink">TRON_LINK_v5▌</span>
+        <span className="mt-2 text-cyan-neon hero-blink font-semibold">TRON_LINK_v5▌</span>
       </div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-5xl mx-auto">
         <motion.div
-          className="mb-5 flex items-center gap-3"
+          className="mb-6 flex items-center gap-3"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.04, ease }}
         >
           <span className="h-px w-10 bg-gradient-to-r from-transparent to-cyan-neon shadow-[0_0_8px_#00F0FF]" />
-          <p className="font-mono text-[11px] md:text-xs tracking-[0.4em] text-cyan-neon uppercase font-semibold">
+          <p className="hero-status-label font-mono text-[11px] md:text-xs tracking-[0.45em] uppercase font-semibold">
             // Grid Status: Online
           </p>
           <span className="h-px w-10 bg-gradient-to-l from-transparent to-cyan-neon shadow-[0_0_8px_#00F0FF]" />
         </motion.div>
 
         <motion.h1
-          className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05] text-neon"
+          className="hero-title font-display text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-[0.04em] leading-[1.08] uppercase"
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08, ease }}
         >
-          Defend the
+          <span className="hero-title-line">Defend the</span>
           <br />
-          <span
-            className="bg-gradient-to-r from-cyan-neon via-electric-blue to-cyan-neon bg-clip-text text-transparent"
-            style={{
-              WebkitBackgroundClip: "text",
-              filter:
-                "drop-shadow(0 0 18px rgba(0,240,255,0.85)) drop-shadow(0 0 40px rgba(0,136,255,0.4))",
-            }}
-          >
-            Infinite.
-          </span>
+          <span className="hero-title-accent">Infinite.</span>
         </motion.h1>
 
         <motion.p
-          className="mt-6 max-w-xl font-body text-base md:text-lg text-cyan-soft/75 leading-relaxed tracking-wide"
+          className="hero-sub mt-7 max-w-xl font-mono text-sm md:text-[15px] leading-relaxed tracking-[0.04em]"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.14, ease }}
