@@ -160,41 +160,59 @@ export default function Hero() {
         <span className="mt-2 text-cyan-neon hero-blink font-semibold">TRON_LINK_v5▌</span>
       </div>
 
-      {/* Content */}
+      {/* Content — dark plate so type pops over rain */}
       <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-5xl mx-auto">
-        <motion.div
-          className="mb-6 flex items-center gap-3"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.04, ease }}
-        >
-          <span className="h-px w-10 bg-gradient-to-r from-transparent to-cyan-neon shadow-[0_0_8px_#00F0FF]" />
-          <p className="hero-status-label font-mono text-[11px] md:text-xs tracking-[0.45em] uppercase font-semibold">
-            // Grid Status: Online
-          </p>
-          <span className="h-px w-10 bg-gradient-to-l from-transparent to-cyan-neon shadow-[0_0_8px_#00F0FF]" />
-        </motion.div>
+        <div className="hero-copy-plate relative px-6 py-8 sm:px-10 sm:py-10 md:px-14 md:py-12 rounded-2xl">
+          <span className="hero-plate-corner hero-plate-tl" />
+          <span className="hero-plate-corner hero-plate-tr" />
+          <span className="hero-plate-corner hero-plate-bl" />
+          <span className="hero-plate-corner hero-plate-br" />
 
-        <motion.h1
-          className="hero-title font-display text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-[0.04em] leading-[1.08] uppercase"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.08, ease }}
-        >
-          <span className="hero-title-line">Defend the</span>
-          <br />
-          <span className="hero-title-accent">Infinite.</span>
-        </motion.h1>
+          <motion.div
+            className="mb-5 md:mb-6 flex items-center justify-center gap-3"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.04, ease }}
+          >
+            <span className="h-px w-8 md:w-12 bg-gradient-to-r from-transparent to-cyan-neon shadow-[0_0_8px_#00F0FF]" />
+            <p className="hero-status-label font-mono text-[10px] md:text-xs tracking-[0.4em] uppercase font-semibold">
+              // Grid Status: Online
+            </p>
+            <span className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent to-cyan-neon shadow-[0_0_8px_#00F0FF]" />
+          </motion.div>
 
-        <motion.p
-          className="hero-sub mt-7 max-w-xl font-mono text-sm md:text-[15px] leading-relaxed tracking-[0.04em]"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.14, ease }}
-        >
-          Jack into the Grid. An impregnable fortress of pure light — AI threat
-          hunting, quantum encryption, and real-time SOC command against the void.
-        </motion.p>
+          {/* Layered neon title for true Tron tube look */}
+          <motion.h1
+            className="hero-title font-display relative select-none"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.08, ease }}
+            aria-label="Defend the Infinite."
+          >
+            {/* Glow bloom layer */}
+            <span className="hero-title-glow" aria-hidden>
+              Defend the
+              <br />
+              Infinite.
+            </span>
+            {/* Core fill */}
+            <span className="hero-title-core">
+              <span className="hero-word">Defend the</span>
+              <br />
+              <span className="hero-word hero-word-accent">Infinite.</span>
+            </span>
+          </motion.h1>
+
+          <motion.p
+            className="hero-sub mt-6 md:mt-8 max-w-xl mx-auto font-mono text-sm md:text-[15px] leading-relaxed tracking-[0.03em]"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.14, ease }}
+          >
+            Jack into the Grid. An impregnable fortress of pure light — AI threat
+            hunting, quantum encryption, and real-time SOC command against the void.
+          </motion.p>
+        </div>
 
         <motion.div
           className="mt-10 flex flex-col sm:flex-row items-center gap-4"

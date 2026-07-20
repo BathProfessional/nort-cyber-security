@@ -510,71 +510,226 @@ body {
   touch-action: none;
 }
 
-/* ── Hero title / letter styling ── */
+/* ── Hero copy plate (legibility over rain) ── */
+.hero-copy-plate {
+  background: radial-gradient(
+      ellipse 80% 70% at 50% 45%,
+      rgba(0, 18, 36, 0.72) 0%,
+      rgba(0, 8, 18, 0.55) 55%,
+      rgba(0, 0, 0, 0.2) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 30, 50, 0.35) 0%,
+      rgba(0, 10, 20, 0.5) 100%
+    );
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 240, 255, 0.22);
+  box-shadow:
+    0 0 40px rgba(0, 240, 255, 0.08),
+    0 0 80px rgba(0, 136, 255, 0.06),
+    inset 0 1px 0 rgba(0, 240, 255, 0.12),
+    inset 0 0 60px rgba(0, 240, 255, 0.03);
+}
+
+.hero-plate-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+.hero-plate-corner::before,
+.hero-plate-corner::after {
+  content: "";
+  position: absolute;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+}
+.hero-plate-tl {
+  top: -1px;
+  left: -1px;
+}
+.hero-plate-tl::before {
+  width: 14px;
+  height: 1.5px;
+  top: 0;
+  left: 0;
+}
+.hero-plate-tl::after {
+  width: 1.5px;
+  height: 14px;
+  top: 0;
+  left: 0;
+}
+.hero-plate-tr {
+  top: -1px;
+  right: -1px;
+}
+.hero-plate-tr::before {
+  width: 14px;
+  height: 1.5px;
+  top: 0;
+  right: 0;
+}
+.hero-plate-tr::after {
+  width: 1.5px;
+  height: 14px;
+  top: 0;
+  right: 0;
+}
+.hero-plate-bl {
+  bottom: -1px;
+  left: -1px;
+}
+.hero-plate-bl::before {
+  width: 14px;
+  height: 1.5px;
+  bottom: 0;
+  left: 0;
+}
+.hero-plate-bl::after {
+  width: 1.5px;
+  height: 14px;
+  bottom: 0;
+  left: 0;
+}
+.hero-plate-br {
+  bottom: -1px;
+  right: -1px;
+}
+.hero-plate-br::before {
+  width: 14px;
+  height: 1.5px;
+  bottom: 0;
+  right: 0;
+}
+.hero-plate-br::after {
+  width: 1.5px;
+  height: 14px;
+  bottom: 0;
+  right: 0;
+}
+
+/* ── Hero title / letter styling (Tron neon tube) ── */
 .hero-status-label {
-  color: #00f0ff;
+  color: #7af6ff;
   text-shadow:
-    0 0 8px rgba(0, 240, 255, 0.9),
-    0 0 18px rgba(0, 240, 255, 0.45);
-  letter-spacing: 0.45em;
+    0 0 6px rgba(0, 240, 255, 1),
+    0 0 16px rgba(0, 240, 255, 0.7),
+    0 0 28px rgba(0, 136, 255, 0.4);
 }
 
 .hero-title {
   position: relative;
+  display: block;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 9vw, 5.75rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  margin: 0;
 }
 
-.hero-title-line {
+/* Soft outer bloom behind letters */
+.hero-title-glow {
+  position: absolute;
+  inset: 0;
+  color: #00f0ff;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-align: center;
+  white-space: pre-line;
+  filter: blur(14px);
+  opacity: 0.65;
+  pointer-events: none;
+  user-select: none;
+  animation: heroGlowPulse 3.2s ease-in-out infinite;
+}
+
+/* Sharp readable core */
+.hero-title-core {
+  position: relative;
+  z-index: 1;
+  display: block;
+  text-align: center;
+}
+
+.hero-word {
   display: inline-block;
-  color: #e0f7ff;
-  letter-spacing: 0.08em;
+  color: #f0fcff;
+  /* multi-stop neon: bright core + cyan rim + blue depth */
   text-shadow:
-    0 0 2px rgba(224, 247, 255, 0.9),
-    0 0 12px rgba(0, 240, 255, 0.55),
-    0 0 28px rgba(0, 240, 255, 0.35),
-    0 0 56px rgba(0, 136, 255, 0.25),
-    0 1px 0 rgba(0, 240, 255, 0.35);
+    0 0 1px #fff,
+    0 0 4px #e0f7ff,
+    0 0 10px #00f0ff,
+    0 0 20px #00f0ff,
+    0 0 40px rgba(0, 240, 255, 0.75),
+    0 0 70px rgba(0, 136, 255, 0.45),
+    0 0 100px rgba(0, 136, 255, 0.25),
+    0 2px 0 rgba(0, 40, 80, 0.5);
+  -webkit-text-stroke: 1px rgba(0, 240, 255, 0.35);
+  paint-order: stroke fill;
 }
 
-.hero-title-accent {
-  display: inline-block;
-  margin-top: 0.06em;
+.hero-word-accent {
+  margin-top: 0.02em;
   background: linear-gradient(
-    105deg,
-    #e0f7ff 0%,
-    #00f0ff 28%,
-    #4db8ff 52%,
-    #0088ff 72%,
-    #00f0ff 100%
+    180deg,
+    #ffffff 0%,
+    #e0f7ff 18%,
+    #00f0ff 48%,
+    #0088ff 82%,
+    #0055aa 100%
   );
-  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  letter-spacing: 0.12em;
-  filter: drop-shadow(0 0 14px rgba(0, 240, 255, 0.85))
-    drop-shadow(0 0 36px rgba(0, 136, 255, 0.5))
-    drop-shadow(0 0 64px rgba(0, 240, 255, 0.25));
-  animation: heroTitleShimmer 5s ease-in-out infinite;
-  /* neon stroke edge for geometric Orbitron look */
-  -webkit-text-stroke: 0.5px rgba(0, 240, 255, 0.25);
+  -webkit-text-stroke: 0;
+  /* re-apply glow via filter (works with clipped text) */
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 1))
+    drop-shadow(0 0 18px rgba(0, 240, 255, 0.85))
+    drop-shadow(0 0 40px rgba(0, 136, 255, 0.55))
+    drop-shadow(0 0 70px rgba(0, 136, 255, 0.3));
+  /* fake stroke with text-shadow underlay via duplicate not needed —
+     use layered outline shadows on a solid fallback for browsers */
+}
+
+/* Solid fallback for accent when clip fails mid-render */
+@supports not (-webkit-background-clip: text) {
+  .hero-word-accent {
+    color: #00f0ff;
+    background: none;
+    text-shadow:
+      0 0 1px #fff,
+      0 0 10px #00f0ff,
+      0 0 30px #00f0ff,
+      0 0 60px rgba(0, 136, 255, 0.6);
+  }
 }
 
 .hero-sub {
-  color: rgba(180, 240, 255, 0.72);
-  text-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+  color: rgba(200, 245, 255, 0.88);
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.8),
+    0 0 12px rgba(0, 240, 255, 0.25);
 }
 
 .hero-hud {
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.35);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.45);
 }
 
-@keyframes heroTitleShimmer {
+@keyframes heroGlowPulse {
   0%,
   100% {
-    background-position: 0% 50%;
+    opacity: 0.5;
+    filter: blur(12px);
   }
   50% {
-    background-position: 100% 50%;
+    opacity: 0.8;
+    filter: blur(18px);
   }
 }
 
