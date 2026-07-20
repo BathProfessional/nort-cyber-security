@@ -8,11 +8,11 @@ import HeroMatrixRain from "./HeroMatrixRain";
 const HeroScene = dynamic(() => import("./three/HeroScene"), {
   ssr: false,
   loading: () => (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="relative">
-        <div className="w-36 h-36 rounded-full border border-cyan-neon/40 animate-pulse shadow-neon-lg" />
-        <div className="absolute inset-4 rounded-full border border-magenta-hot/30 animate-pulse" />
-      </div>
+    <div className="absolute inset-0 flex items-center justify-center bg-black">
+      <div
+        className="w-32 h-32 rounded-full border border-[#00FF41]/40 animate-pulse"
+        style={{ boxShadow: "0 0 40px rgba(0,255,65,0.35)" }}
+      />
     </div>
   ),
 });
@@ -25,83 +25,101 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden pt-24 pb-16"
+      className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden pt-24 pb-16 bg-black"
     >
-      {/* Deep void */}
-      <div className="absolute inset-0 z-0 bg-black" />
-
-      {/* 2D Matrix rain layer */}
+      {/* Full Matrix rain — primary visual */}
       <HeroMatrixRain />
 
-      {/* 3D Tron world */}
+      {/* Subtle 3D shield sitting inside the rain */}
       <div
-        className="absolute inset-0 z-[2] will-change-transform"
+        className="absolute inset-0 z-[2] will-change-transform opacity-80"
         style={{
-          transform: `translate3d(${normalized.x * 8}px, ${-normalized.y * 5}px, 0)`,
+          transform: `translate3d(${normalized.x * 6}px, ${-normalized.y * 4}px, 0)`,
+          maskImage:
+            "radial-gradient(ellipse 55% 50% at 50% 38%, black 20%, transparent 72%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 55% 50% at 50% 38%, black 20%, transparent 72%)",
         }}
       >
         <HeroScene />
       </div>
 
-      {/* Vignette + horizon bloom overlays */}
-      <div className="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-b from-black/70 via-transparent to-black" />
-      <div className="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
+      {/* Soft vignette so rain densifies at edges, text stays readable */}
       <div
-        className="absolute left-0 right-0 top-[42%] z-[3] pointer-events-none h-[2px] opacity-70"
+        className="absolute inset-0 z-[3] pointer-events-none"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(0,240,255,0.15) 20%, rgba(0,240,255,0.85) 50%, rgba(0,240,255,0.15) 80%, transparent)",
-          boxShadow:
-            "0 0 30px 6px rgba(0,240,255,0.45), 0 0 80px 16px rgba(0,136,255,0.25)",
+            "radial-gradient(ellipse 70% 55% at 50% 45%, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.88) 100%)",
         }}
       />
+      <div className="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-b from-black/50 via-transparent to-black" />
+      <div className="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+
+      {/* Green matrix glow behind title zone */}
       <div
-        className="absolute inset-0 z-[3] pointer-events-none opacity-30"
+        className="absolute left-1/2 top-[38%] -translate-x-1/2 z-[3] pointer-events-none w-[70vw] max-w-3xl h-40 opacity-40"
         style={{
           background:
-            "radial-gradient(ellipse 50% 40% at 50% 38%, rgba(0,240,255,0.18) 0%, transparent 60%)",
+            "radial-gradient(ellipse, rgba(0,255,65,0.22) 0%, transparent 70%)",
+          filter: "blur(20px)",
         }}
       />
 
-      {/* Tron corner brackets */}
-      <div className="absolute inset-4 md:inset-8 z-[4] pointer-events-none">
-        <span className="absolute top-0 left-0 w-10 h-10 border-l-2 border-t-2 border-cyan-neon/50 shadow-[0_0_12px_rgba(0,240,255,0.4)]" />
-        <span className="absolute top-0 right-0 w-10 h-10 border-r-2 border-t-2 border-cyan-neon/50 shadow-[0_0_12px_rgba(0,240,255,0.4)]" />
-        <span className="absolute bottom-0 left-0 w-10 h-10 border-l-2 border-b-2 border-cyan-neon/40" />
-        <span className="absolute bottom-0 right-0 w-10 h-10 border-r-2 border-b-2 border-cyan-neon/40" />
+      {/* Scanline overlay — Matrix CRT feel */}
+      <div
+        className="absolute inset-0 z-[4] pointer-events-none opacity-[0.12]"
+        style={{
+          background:
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.35) 2px, rgba(0,0,0,0.35) 4px)",
+        }}
+      />
+
+      {/* Corner code brackets */}
+      <div className="absolute inset-4 md:inset-8 z-[5] pointer-events-none">
+        <span className="absolute top-0 left-0 w-8 h-8 border-l border-t border-[#00FF41]/45" />
+        <span className="absolute top-0 right-0 w-8 h-8 border-r border-t border-[#00FF41]/45" />
+        <span className="absolute bottom-0 left-0 w-8 h-8 border-l border-b border-[#00FF41]/35" />
+        <span className="absolute bottom-0 right-0 w-8 h-8 border-r border-b border-[#00FF41]/35" />
       </div>
 
-      {/* HUD side labels */}
-      <div className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-[4] hidden md:flex flex-col gap-2 font-mono text-[9px] tracking-widest text-cyan-neon/35 pointer-events-none">
-        <span>SECTOR_01</span>
-        <span>GRID://MAIN</span>
-        <span className="text-cyan-neon/60">SHIELD_ONLINE</span>
-        <span>MATRIX_FEED</span>
+      {/* Side code streams */}
+      <div className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-[5] hidden md:flex flex-col gap-1.5 font-mono text-[9px] tracking-widest text-[#00FF41]/40 pointer-events-none select-none">
+        <span>WAKE_UP</span>
+        <span>FOLLOW_WHITERABBIT</span>
+        <span className="text-[#00FF41]/75">THE_MATRIX_HAS_YOU</span>
+        <span>KNOCK_KNOCK</span>
+        <span>0xDEADBEEF</span>
       </div>
-      <div className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-[4] hidden md:flex flex-col gap-2 items-end font-mono text-[9px] tracking-widest text-cyan-neon/35 pointer-events-none">
-        <span>LATENCY 0.4ms</span>
-        <span>NODES 12,847</span>
-        <span className="text-magenta-hot/50">THREATS_BLOCKED</span>
-        <span>∞ DEFENSE</span>
+      <div className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-[5] hidden md:flex flex-col gap-1.5 items-end font-mono text-[9px] tracking-widest text-[#00FF41]/40 pointer-events-none select-none">
+        <span>NEO://ONLINE</span>
+        <span>ZION_UPLINK</span>
+        <span className="text-[#00FF41]/75">DEFENSE_PROTOCOL</span>
+        <span>RED_PILL</span>
+        <span>∞ SECURE</span>
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-5xl mx-auto mt-[36vh] md:mt-[40vh]">
+      <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-5xl mx-auto mt-[34vh] md:mt-[38vh]">
         <motion.div
           className="mb-4 flex items-center gap-3"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.05, ease }}
         >
-          <span className="h-px w-8 bg-gradient-to-r from-transparent to-cyan-neon/70" />
-          <p className="font-mono text-[10px] md:text-xs tracking-[0.5em] text-cyan-neon/80 uppercase">
-            // Grid Status: Online
+          <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#00FF41]/80" />
+          <p className="font-mono text-[10px] md:text-xs tracking-[0.45em] text-[#00FF41]/90 uppercase">
+            // System Online — Trace Route Null
           </p>
-          <span className="h-px w-8 bg-gradient-to-l from-transparent to-cyan-neon/70" />
+          <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#00FF41]/80" />
         </motion.div>
 
         <motion.h1
-          className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-neon leading-[1.05]"
+          className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.05]"
+          style={{
+            color: "#B8FFB8",
+            textShadow:
+              "0 0 10px rgba(0,255,65,0.9), 0 0 30px rgba(0,255,65,0.55), 0 0 60px rgba(0,180,40,0.35), 0 0 2px #00FF41",
+          }}
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.12, ease }}
@@ -109,10 +127,10 @@ export default function Hero() {
           Defend the
           <br />
           <span
-            className="relative inline-block bg-gradient-to-r from-cyan-neon via-electric-blue to-magenta-hot bg-clip-text text-transparent"
             style={{
-              WebkitBackgroundClip: "text",
-              filter: "drop-shadow(0 0 40px rgba(0,240,255,0.65))",
+              color: "#00FF41",
+              textShadow:
+                "0 0 12px rgba(0,255,65,1), 0 0 40px rgba(0,255,65,0.7), 0 0 80px rgba(0,255,65,0.4)",
             }}
           >
             Infinite.
@@ -120,13 +138,13 @@ export default function Hero() {
         </motion.h1>
 
         <motion.p
-          className="mt-6 max-w-xl font-body text-base md:text-lg text-cyan-soft/75 leading-relaxed tracking-wide"
+          className="mt-6 max-w-xl font-mono text-sm md:text-base text-[#7CFF9A]/75 leading-relaxed tracking-wide"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, delay: 0.22, ease }}
         >
-          Jack into the Grid. An impregnable fortress of pure light — AI threat
-          hunting, quantum encryption, and real-time SOC command against the void.
+          There is no spoon — only the Grid. AI threat hunting, quantum encryption,
+          and real-time SOC command. See the code. Stop the breach.
         </motion.p>
 
         <motion.div
@@ -137,14 +155,26 @@ export default function Hero() {
         >
           <a
             href="#solutions"
-            className="btn-energy btn-primary px-8 py-3.5 rounded-lg font-display text-sm tracking-[0.2em] uppercase min-w-[200px]"
+            className="relative px-8 py-3.5 rounded-sm font-display text-sm tracking-[0.2em] uppercase min-w-[200px] font-bold transition-all duration-200"
+            style={{
+              background: "#00FF41",
+              color: "#000",
+              boxShadow:
+                "0 0 20px rgba(0,255,65,0.55), 0 0 40px rgba(0,255,65,0.25)",
+            }}
             data-cursor="hover"
           >
             Enter the Grid
           </a>
           <a
             href="#uplink"
-            className="btn-energy btn-secondary px-8 py-3.5 rounded-lg font-display text-sm tracking-[0.2em] uppercase min-w-[200px]"
+            className="px-8 py-3.5 rounded-sm font-display text-sm tracking-[0.2em] uppercase min-w-[200px] font-bold border transition-all duration-200"
+            style={{
+              borderColor: "rgba(0,255,65,0.65)",
+              color: "#00FF41",
+              boxShadow: "0 0 16px rgba(0,255,65,0.2)",
+              background: "rgba(0,20,0,0.4)",
+            }}
             data-cursor="hover"
           >
             Request Briefing
@@ -157,11 +187,14 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.4 }}
         >
-          <span className="font-mono text-[9px] tracking-[0.3em] text-cyan-neon/40 uppercase">
+          <span className="font-mono text-[9px] tracking-[0.35em] text-[#00FF41]/45 uppercase">
             Scroll to Descend
           </span>
           <motion.div
-            className="w-px h-8 bg-gradient-to-b from-cyan-neon/70 to-transparent"
+            className="w-px h-8"
+            style={{
+              background: "linear-gradient(to bottom, #00FF41, transparent)",
+            }}
             animate={{ scaleY: [1, 0.55, 1], opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
           />

@@ -3,7 +3,10 @@
 import { useEffect, useRef } from "react";
 import { useIsMobile } from "@/hooks/useMousePosition";
 
-/** Classic Matrix-style digital rain — cyan/blue Tron palette */
+/**
+ * Classic Matrix digital rain — dense green cascading code.
+ * Full-bleed, high intensity, movie-style.
+ */
 export default function HeroMatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMobile = useIsMobile();
@@ -11,19 +14,29 @@ export default function HeroMatrixRain() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
     let raf = 0;
     let running = true;
     let w = 0;
     let h = 0;
+    let fontSize = isMobile ? 13 : 15;
     let cols = 0;
-    let drops: number[] = [];
-    let speeds: number[] = [];
+
+    // Per-column state for longer, more cinematic trails
+    type Col = {
+      y: number;
+      speed: number;
+      len: number;
+      chars: string[];
+    };
+    let columns: Col[] = [];
 
     const glyphs =
-      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEF<>[]{}|/\\$#@%&*";
+      "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>[]{}|/\\$#@%&*+=:;";
+
+    const randChar = () => glyphs[(Math.random() * glyphs.length) | 0];
 
     const resize = () => {
       const parent = canvas.parentElement;
@@ -31,73 +44,98 @@ export default function HeroMatrixRain() {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       w = parent.clientWidth;
       h = parent.clientHeight;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const fontSize = isMobile ? 14 : 16;
-      cols = Math.floor(w / fontSize);
-      drops = Array.from({ length: cols }, () => Math.random() * -40);
-      speeds = Array.from({ length: cols }, () => 0.35 + Math.random() * 0.9);
+      fontSize = isMobile ? 13 : 15;
+      cols = Math.ceil(w / fontSize) + 1;
+      columns = Array.from({ length: cols }, () => {
+        const len = 8 + ((Math.random() * 22) | 0);
+        return {
+          y: Math.random() * -60,
+          speed: 0.45 + Math.random() * 1.1,
+          len,
+          chars: Array.from({ length: len }, randChar),
+        };
+      });
+
+      // Solid black base
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, w, h);
     };
 
     resize();
     window.addEventListener("resize", resize);
 
-    const fontSize = () => (isMobile ? 14 : 16);
-
+    let frame = 0;
     const draw = () => {
       if (!running) return;
+      frame++;
 
-      // Fade trail
-      ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+      // Classic Matrix trail fade (darker = longer trails)
+      ctx.fillStyle = "rgba(0, 0, 0, 0.055)";
       ctx.fillRect(0, 0, w, h);
 
-      const fs = fontSize();
-      ctx.font = `${fs}px "JetBrains Mono", monospace`;
+      ctx.font = `600 ${fontSize}px "JetBrains Mono", "Courier New", monospace`;
+      ctx.textBaseline = "top";
 
-      for (let i = 0; i < drops.length; i++) {
-        const x = i * fs;
-        const y = drops[i] * fs;
-        const char = glyphs[Math.floor(Math.random() * glyphs.length)];
+      for (let i = 0; i < columns.length; i++) {
+        const col = columns[i];
+        const x = i * fontSize;
 
-        // Head glow (bright cyan)
-        ctx.fillStyle = "#E0F7FF";
-        ctx.shadowColor = "#00F0FF";
-        ctx.shadowBlur = 8;
-        ctx.fillText(char, x, y);
-
-        // Trail body
-        ctx.shadowBlur = 0;
-        ctx.fillStyle =
-          i % 11 === 0
-            ? "rgba(255, 0, 170, 0.45)"
-            : "rgba(0, 240, 255, 0.35)";
-        ctx.fillText(
-          glyphs[Math.floor(Math.random() * glyphs.length)],
-          x,
-          y - fs
-        );
-        ctx.fillStyle = "rgba(0, 136, 255, 0.2)";
-        ctx.fillText(
-          glyphs[Math.floor(Math.random() * glyphs.length)],
-          x,
-          y - fs * 2
-        );
-
-        if (y > h && Math.random() > 0.975) {
-          drops[i] = Math.random() * -20;
+        // Occasionally scramble trail characters
+        if (frame % 3 === 0) {
+          for (let c = 0; c < col.chars.length; c++) {
+            if (Math.random() > 0.92) col.chars[c] = randChar();
+          }
         }
-        drops[i] += speeds[i];
+
+        for (let j = 0; j < col.len; j++) {
+          const yy = (col.y - j) * fontSize;
+          if (yy < -fontSize || yy > h + fontSize) continue;
+
+          const ch = col.chars[j] || randChar();
+          const t = j / col.len; // 0 = head, 1 = tail
+
+          if (j === 0) {
+            // Bright white-green head
+            ctx.fillStyle = "#C8FFC8";
+            ctx.shadowColor = "#00FF41";
+            ctx.shadowBlur = 12;
+            ctx.fillText(ch, x, yy);
+            ctx.shadowBlur = 0;
+          } else if (j < 3) {
+            ctx.fillStyle = "#00FF41";
+            ctx.shadowColor = "#00FF41";
+            ctx.shadowBlur = 6;
+            ctx.fillText(ch, x, yy);
+            ctx.shadowBlur = 0;
+          } else if (t < 0.45) {
+            ctx.fillStyle = `rgba(0, 255, 65, ${0.75 - t * 0.8})`;
+            ctx.fillText(ch, x, yy);
+          } else {
+            ctx.fillStyle = `rgba(0, 140, 30, ${0.45 - (t - 0.45) * 0.5})`;
+            ctx.fillText(ch, x, yy);
+          }
+        }
+
+        col.y += col.speed;
+
+        // Reset column past bottom
+        if ((col.y - col.len) * fontSize > h) {
+          col.y = Math.random() * -40;
+          col.speed = 0.45 + Math.random() * 1.15;
+          col.len = 8 + ((Math.random() * 24) | 0);
+          col.chars = Array.from({ length: col.len }, randChar);
+        }
       }
 
       raf = requestAnimationFrame(draw);
     };
 
-    // Clear once so we don't start fully black opaque
-    ctx.clearRect(0, 0, w, h);
     raf = requestAnimationFrame(draw);
 
     return () => {
@@ -110,7 +148,7 @@ export default function HeroMatrixRain() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-[1] pointer-events-none opacity-40 mix-blend-screen"
+      className="absolute inset-0 z-[1] pointer-events-none"
       aria-hidden
     />
   );

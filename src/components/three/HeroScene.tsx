@@ -16,7 +16,7 @@ function TronGridFloor() {
       side: THREE.DoubleSide,
       uniforms: {
         uTime: { value: 0 },
-        uColor: { value: new THREE.Color("#00F0FF") },
+        uColor: { value: new THREE.Color("#00FF41") },
       },
       vertexShader: `
         varying vec2 vUv;
@@ -41,7 +41,7 @@ function TronGridFloor() {
           // Horizon bloom
           float horizon = exp(-pow((vUv.y - 0.92) * 18.0, 2.0)) * 0.9;
           float alpha = (line * fade + horizon * 0.5) * 0.95;
-          vec3 col = mix(uColor, vec3(0.0, 0.5, 1.0), vUv.y);
+          vec3 col = mix(uColor, vec3(0.0, 0.35, 0.08), vUv.y);
           gl_FragColor = vec4(col, alpha);
         }
       `,
@@ -63,9 +63,9 @@ function TronGridFloor() {
       <mesh position={[0, 0.02, -12]} rotation={[0, 0, 0]}>
         <planeGeometry args={[30, 0.08]} />
         <meshBasicMaterial
-          color="#00F0FF"
+          color="#00FF41"
           transparent
-          opacity={0.7}
+          opacity={0.55}
           depthWrite={false}
           toneMapped={false}
         />
@@ -106,10 +106,11 @@ function MatrixRain({ count = 400 }: { count?: number }) {
       dummy.scale.set(d.size * 0.4, d.size * (2 + pulse * 2), d.size * 0.4);
       dummy.updateMatrix();
       mesh.current!.setMatrixAt(i, dummy.matrix);
+      // Classic Matrix green (+ occasional bright head)
       if (d.hue === 0) {
-        color.setRGB(0, 0.94 * pulse, 1);
+        color.setRGB(0, 1 * pulse, 0.25 * pulse);
       } else {
-        color.setRGB(1, 0, 0.67 * pulse);
+        color.setRGB(0.7 * pulse, 1 * pulse, 0.7 * pulse);
       }
       mesh.current!.setColorAt(i, color);
     });
@@ -168,30 +169,30 @@ function ShieldCore({
       {/* Outer wireframe dodeca / icosa */}
       <mesh>
         <icosahedronGeometry args={[2.0, 1]} />
-        <meshBasicMaterial color="#00F0FF" wireframe transparent opacity={0.2} />
+        <meshBasicMaterial color="#00FF41" wireframe transparent opacity={0.22} />
       </mesh>
       <mesh>
         <icosahedronGeometry args={[1.55, 1]} />
         <meshStandardMaterial
-          color="#001018"
-          emissive="#00F0FF"
-          emissiveIntensity={0.15}
+          color="#001408"
+          emissive="#00FF41"
+          emissiveIntensity={0.2}
           metalness={0.95}
           roughness={0.15}
           transparent
-          opacity={0.9}
+          opacity={0.92}
         />
       </mesh>
       <mesh>
         <icosahedronGeometry args={[1.58, 1]} />
-        <meshBasicMaterial color="#00F0FF" wireframe transparent opacity={0.65} />
+        <meshBasicMaterial color="#00FF41" wireframe transparent opacity={0.7} />
       </mesh>
 
       {/* Circuit plates */}
       <group ref={inner}>
         {Array.from({ length: 8 }).map((_, i) => {
           const a = (i / 8) * Math.PI * 2;
-          const col = i % 3 === 0 ? "#FF00AA" : i % 2 === 0 ? "#0088FF" : "#00F0FF";
+          const col = i % 3 === 0 ? "#7CFF9A" : i % 2 === 0 ? "#00CC33" : "#00FF41";
           return (
             <mesh
               key={i}
@@ -202,11 +203,11 @@ function ShieldCore({
               <meshStandardMaterial
                 color={col}
                 emissive={col}
-                emissiveIntensity={1.2}
+                emissiveIntensity={1.3}
                 metalness={0.6}
                 roughness={0.2}
                 transparent
-                opacity={0.8}
+                opacity={0.85}
               />
             </mesh>
           );
@@ -216,14 +217,14 @@ function ShieldCore({
       {/* Identity disc core */}
       <mesh ref={core} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[0.55, 0.08, 12, 48]} />
-        <meshBasicMaterial color="#00F0FF" toneMapped={false} />
+        <meshBasicMaterial color="#00FF41" toneMapped={false} />
       </mesh>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.35, 0.35, 0.1, 6]} />
         <meshStandardMaterial
-          color="#FF00AA"
-          emissive="#FF00AA"
-          emissiveIntensity={2}
+          color="#B8FFB8"
+          emissive="#00FF41"
+          emissiveIntensity={2.2}
           toneMapped={false}
         />
       </mesh>
@@ -231,32 +232,32 @@ function ShieldCore({
       {/* Orbiting energy rings */}
       <mesh ref={ringA}>
         <torusGeometry args={[2.15, 0.018, 8, 80]} />
-        <meshBasicMaterial color="#00F0FF" transparent opacity={0.85} toneMapped={false} />
+        <meshBasicMaterial color="#00FF41" transparent opacity={0.85} toneMapped={false} />
       </mesh>
       <mesh ref={ringB} rotation={[Math.PI / 3, 0.4, 0]}>
         <torusGeometry args={[2.35, 0.012, 8, 80]} />
-        <meshBasicMaterial color="#FF00AA" transparent opacity={0.5} toneMapped={false} />
+        <meshBasicMaterial color="#7CFF9A" transparent opacity={0.45} toneMapped={false} />
       </mesh>
       <mesh ref={ringC} rotation={[1.1, 0.6, 0.2]}>
         <torusGeometry args={[2.55, 0.01, 8, 80]} />
-        <meshBasicMaterial color="#0088FF" transparent opacity={0.4} toneMapped={false} />
+        <meshBasicMaterial color="#008F11" transparent opacity={0.5} toneMapped={false} />
       </mesh>
 
       {/* Scan ring on disc face */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.9, 0.95, 64]} />
         <meshBasicMaterial
-          color="#00F0FF"
+          color="#00FF41"
           transparent
-          opacity={0.5}
+          opacity={0.55}
           side={THREE.DoubleSide}
           depthWrite={false}
         />
       </mesh>
 
-      <pointLight color="#00F0FF" intensity={4} distance={12} />
-      <pointLight color="#FF00AA" intensity={1.5} distance={6} position={[0.5, 0.3, 0.5]} />
-      <pointLight color="#0088FF" intensity={1.2} distance={8} position={[-1, -0.5, 1]} />
+      <pointLight color="#00FF41" intensity={4.5} distance={12} />
+      <pointLight color="#7CFF9A" intensity={1.2} distance={6} position={[0.5, 0.3, 0.5]} />
+      <pointLight color="#008F11" intensity={1} distance={8} position={[-1, -0.5, 1]} />
     </group>
   );
 }
@@ -295,7 +296,7 @@ function LightRibbons() {
         <mesh key={i}>
           <tubeGeometry args={[curve, 40, 0.015 + (i % 2) * 0.01, 6, false]} />
           <meshBasicMaterial
-            color={i % 3 === 0 ? "#FF00AA" : "#00F0FF"}
+            color={i % 3 === 0 ? "#7CFF9A" : "#00FF41"}
             transparent
             opacity={0.4}
             toneMapped={false}
@@ -312,8 +313,8 @@ function ThreatParticles() {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const colorTemp = useMemo(() => new THREE.Color(), []);
-  const cyan = useMemo(() => new THREE.Color("#00F0FF"), []);
-  const threat = useMemo(() => new THREE.Color("#FF2266"), []);
+  const cyan = useMemo(() => new THREE.Color("#00FF41"), []);
+  const threat = useMemo(() => new THREE.Color("#FF3344"), []);
 
   const data = useMemo(
     () =>
@@ -405,7 +406,7 @@ function DataTowers() {
           <mesh position={[0, t.h / 2, 0]}>
             <boxGeometry args={[t.w, t.h, t.w]} />
             <meshBasicMaterial
-              color={i % 4 === 0 ? "#FF00AA" : i % 2 === 0 ? "#0088FF" : "#00F0FF"}
+              color={i % 4 === 0 ? "#7CFF9A" : i % 2 === 0 ? "#008F11" : "#00FF41"}
               transparent
               opacity={0.35}
               wireframe={t.wire}
@@ -415,7 +416,7 @@ function DataTowers() {
           {/* Beacon top */}
           <mesh position={[0, t.h + 0.05, 0]}>
             <boxGeometry args={[t.w * 0.6, 0.06, t.w * 0.6]} />
-            <meshBasicMaterial color="#00F0FF" toneMapped={false} />
+            <meshBasicMaterial color="#00FF41" toneMapped={false} />
           </mesh>
         </group>
       ))}
@@ -443,7 +444,7 @@ function EnergyWaves() {
         <mesh key={i}>
           <ringGeometry args={[0.98, 1.05, 80]} />
           <meshBasicMaterial
-            color={i % 2 === 0 ? "#00F0FF" : "#0088FF"}
+            color={i % 2 === 0 ? "#00FF41" : "#008F11"}
             transparent
             opacity={0.4}
             side={THREE.DoubleSide}
@@ -466,15 +467,15 @@ function HexBackdrop() {
     <group ref={ref} position={[0, 0.5, -6]}>
       <mesh>
         <circleGeometry args={[8, 6]} />
-        <meshBasicMaterial color="#00F0FF" wireframe transparent opacity={0.08} />
+        <meshBasicMaterial color="#00FF41" wireframe transparent opacity={0.1} />
       </mesh>
       <mesh>
         <circleGeometry args={[5.5, 6]} />
-        <meshBasicMaterial color="#0088FF" wireframe transparent opacity={0.12} />
+        <meshBasicMaterial color="#008F11" wireframe transparent opacity={0.14} />
       </mesh>
       <mesh>
         <circleGeometry args={[3, 6]} />
-        <meshBasicMaterial color="#FF00AA" wireframe transparent opacity={0.1} />
+        <meshBasicMaterial color="#7CFF9A" wireframe transparent opacity={0.12} />
       </mesh>
     </group>
   );
@@ -506,7 +507,7 @@ function Scene() {
 
       <TronGridFloor />
       <HexBackdrop />
-      <MatrixRain count={isMobile ? 120 : 380} />
+      <MatrixRain count={isMobile ? 180 : 520} />
 
       <Float speed={1.2} rotationIntensity={0.08} floatIntensity={0.35}>
         <ShieldCore mouse={mouse} />
@@ -522,7 +523,7 @@ function Scene() {
         scale={[14, 10, 10]}
         size={1.8}
         speed={0.5}
-        color="#00F0FF"
+        color="#00FF41"
         opacity={0.55}
       />
 
@@ -530,7 +531,7 @@ function Scene() {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.55, 0]}>
         <circleGeometry args={[5, 64]} />
         <meshBasicMaterial
-          color="#00F0FF"
+          color="#00FF41"
           transparent
           opacity={0.06}
           side={THREE.DoubleSide}
