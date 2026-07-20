@@ -228,7 +228,7 @@ function ServiceCard({
       className="service-card glass-panel relative p-6 md:p-8 rounded-2xl overflow-hidden group"
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
       data-cursor="hover"
     >
       <span className="circuit-corner tl" />
@@ -304,7 +304,7 @@ export default function Services() {
           className="mb-14 md:mb-16 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.45 }}
         >
           <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-cyan-neon/60 uppercase mb-3">
             // Capabilities Matrix

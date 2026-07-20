@@ -43,7 +43,7 @@ export default function Navigation() {
       className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-4 md:pt-5"
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
     >
       <nav
         className={`

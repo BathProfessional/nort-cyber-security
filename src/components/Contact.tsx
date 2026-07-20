@@ -46,7 +46,7 @@ export default function Contact() {
       }
 
       // Brief charge animation, then success
-      await new Promise((r) => setTimeout(r, 600));
+      await new Promise((r) => setTimeout(r, 250));
       setStatus("sent");
       form.reset();
     } catch (err) {
@@ -69,7 +69,7 @@ export default function Contact() {
           className="mb-12 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.45 }}
         >
           <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-cyan-neon/60 uppercase mb-3">
             // Secure Uplink
@@ -144,7 +144,7 @@ export default function Contact() {
           className="glass-panel-intense relative rounded-2xl p-6 md:p-10 overflow-hidden"
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.15 }}
+          transition={{ duration: 0.45, delay: 0.06 }}
         >
           <span className="circuit-corner tl" />
           <span className="circuit-corner tr" />

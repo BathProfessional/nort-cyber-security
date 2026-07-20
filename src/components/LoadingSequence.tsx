@@ -14,27 +14,26 @@ export default function LoadingSequence({ onComplete }: LoadingSequenceProps) {
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    // Phase timeline
-    timers.push(setTimeout(() => setPhase(1), 200)); // grid builds
-    timers.push(setTimeout(() => setPhase(2), 900)); // logo constructs
-    timers.push(setTimeout(() => setPhase(3), 2200)); // energy surge
+    // Faster cinematic timeline (~1.4s total)
+    timers.push(setTimeout(() => setPhase(1), 80));
+    timers.push(setTimeout(() => setPhase(2), 280));
+    timers.push(setTimeout(() => setPhase(3), 1000));
     timers.push(
       setTimeout(() => {
         setPhase(4);
         onComplete();
-      }, 3200)
+      }, 1400)
     );
 
-    // Progress bar
     let p = 0;
     const interval = setInterval(() => {
-      p += Math.random() * 8 + 2;
+      p += Math.random() * 18 + 8;
       if (p >= 100) {
         p = 100;
         clearInterval(interval);
       }
       setProgress(Math.min(100, p));
-    }, 80);
+    }, 40);
 
     return () => {
       timers.forEach(clearTimeout);
@@ -46,24 +45,23 @@ export default function LoadingSequence({ onComplete }: LoadingSequenceProps) {
     <AnimatePresence>
       {phase < 4 && (
         <motion.div
-          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-black overflow-hidden"
+          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-black overflow-hidden will-change-transform"
           exit={{
             opacity: 0,
-            scale: 1.05,
-            filter: "brightness(2)",
-            transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+            scale: 1.03,
+            filter: "brightness(1.6)",
+            transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
           }}
         >
-          {/* Expanding grid from center */}
           <motion.div
             className="absolute inset-0"
-            initial={{ opacity: 0, scale: 0.3 }}
+            initial={{ opacity: 0, scale: 0.5 }}
             animate={
               phase >= 1
                 ? { opacity: 1, scale: 1 }
-                : { opacity: 0, scale: 0.3 }
+                : { opacity: 0, scale: 0.5 }
             }
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
             <div
               className="absolute inset-0"
@@ -79,7 +77,6 @@ export default function LoadingSequence({ onComplete }: LoadingSequenceProps) {
                   "radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 75%)",
               }}
             />
-            {/* Floor perspective grid */}
             <div
               className="absolute bottom-0 left-0 right-0 h-[50%]"
               style={{
@@ -98,48 +95,42 @@ export default function LoadingSequence({ onComplete }: LoadingSequenceProps) {
             />
           </motion.div>
 
-          {/* Particles */}
           {phase >= 1 &&
-            Array.from({ length: 40 }).map((_, i) => (
+            Array.from({ length: 16 }).map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-1 h-1 rounded-full bg-cyan-neon"
                 style={{
-                  left: `${20 + Math.random() * 60}%`,
-                  top: `${20 + Math.random() * 60}%`,
+                  left: `${25 + Math.random() * 50}%`,
+                  top: `${25 + Math.random() * 50}%`,
                   boxShadow: "0 0 6px #00F0FF",
                 }}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{
                   opacity: [0, 0.8, 0],
-                  scale: [0, 1.5, 0],
-                  x: (Math.random() - 0.5) * 200,
-                  y: (Math.random() - 0.5) * 200,
+                  scale: [0, 1.2, 0],
+                  x: (Math.random() - 0.5) * 120,
+                  y: (Math.random() - 0.5) * 120,
                 }}
                 transition={{
-                  duration: 1.5 + Math.random(),
-                  delay: Math.random() * 0.8,
-                  repeat: Infinity,
-                  repeatDelay: Math.random() * 2,
+                  duration: 0.7,
+                  delay: Math.random() * 0.25,
                 }}
               />
             ))}
 
-          {/* Logo construction */}
           <motion.div
             className="relative z-10 flex flex-col items-center"
             initial={{ opacity: 0 }}
             animate={phase >= 2 ? { opacity: 1 } : { opacity: 0 }}
           >
-            {/* Geometric shield logo SVG */}
             <svg
-              width="120"
-              height="140"
+              width="100"
+              height="116"
               viewBox="0 0 120 140"
               fill="none"
-              className="mb-6 drop-shadow-[0_0_30px_rgba(0,240,255,0.6)]"
+              className="mb-5 drop-shadow-[0_0_30px_rgba(0,240,255,0.6)]"
             >
-              {/* Outer shield */}
               <motion.path
                 d="M60 8 L108 28 L108 70 Q108 110 60 132 Q12 110 12 70 L12 28 Z"
                 stroke="#00F0FF"
@@ -151,9 +142,8 @@ export default function LoadingSequence({ onComplete }: LoadingSequenceProps) {
                     ? { pathLength: 1, opacity: 1 }
                     : { pathLength: 0, opacity: 0 }
                 }
-                transition={{ duration: 1.1, ease: "easeOut" }}
+                transition={{ duration: 0.55, ease: "easeOut" }}
               />
-              {/* Inner geometry */}
               <motion.path
                 d="M60 28 L90 42 L90 68 Q90 92 60 108 Q30 92 30 68 L30 42 Z"
                 stroke="#0088FF"
@@ -161,18 +151,16 @@ export default function LoadingSequence({ onComplete }: LoadingSequenceProps) {
                 fill="none"
                 initial={{ pathLength: 0 }}
                 animate={phase >= 2 ? { pathLength: 1 } : { pathLength: 0 }}
-                transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                transition={{ duration: 0.45, delay: 0.12, ease: "easeOut" }}
               />
-              {/* Circuit cross */}
               <motion.path
                 d="M60 40 L60 96 M42 68 L78 68"
                 stroke="#00F0FF"
                 strokeWidth="1.5"
                 initial={{ pathLength: 0 }}
                 animate={phase >= 2 ? { pathLength: 1 } : { pathLength: 0 }}
-                transition={{ duration: 0.7, delay: 0.5 }}
+                transition={{ duration: 0.35, delay: 0.2 }}
               />
-              {/* Center hexagon */}
               <motion.polygon
                 points="60,52 70,58 70,70 60,76 50,70 50,58"
                 stroke="#FF00AA"
@@ -184,104 +172,68 @@ export default function LoadingSequence({ onComplete }: LoadingSequenceProps) {
                     ? { opacity: 1, scale: 1 }
                     : { opacity: 0, scale: 0.5 }
                 }
-                transition={{ duration: 0.5, delay: 0.8 }}
+                transition={{ duration: 0.25, delay: 0.3 }}
                 style={{ transformOrigin: "60px 64px" }}
               />
-              {/* Energy nodes */}
-              {[
-                [60, 28],
-                [90, 42],
-                [90, 68],
-                [60, 108],
-                [30, 68],
-                [30, 42],
-              ].map(([cx, cy], i) => (
-                <motion.circle
-                  key={i}
-                  cx={cx}
-                  cy={cy}
-                  r="2.5"
-                  fill="#00F0FF"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={
-                    phase >= 2
-                      ? { opacity: [0.5, 1, 0.5], scale: 1 }
-                      : { opacity: 0, scale: 0 }
-                  }
-                  transition={{
-                    opacity: { duration: 1.5, repeat: Infinity, delay: 0.9 + i * 0.1 },
-                    scale: { duration: 0.3, delay: 0.9 + i * 0.08 },
-                  }}
-                  style={{ filter: "drop-shadow(0 0 4px #00F0FF)" }}
-                />
-              ))}
             </svg>
 
-            {/* Wordmark */}
             <motion.h1
               className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.2em] text-neon text-center px-4"
-              initial={{ opacity: 0, letterSpacing: "0.5em" }}
+              initial={{ opacity: 0, y: 12 }}
               animate={
                 phase >= 2
-                  ? { opacity: 1, letterSpacing: "0.2em" }
-                  : { opacity: 0, letterSpacing: "0.5em" }
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 12 }
               }
-              transition={{ duration: 0.9, delay: 0.6 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
             >
               NORT CYBER SECURITY
             </motion.h1>
 
             <motion.p
-              className="mt-3 font-mono text-xs tracking-[0.4em] text-cyan-neon/60 uppercase"
+              className="mt-2 font-mono text-xs tracking-[0.4em] text-cyan-neon/60 uppercase"
               initial={{ opacity: 0 }}
               animate={phase >= 2 ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ delay: 1.1 }}
+              transition={{ delay: 0.35 }}
             >
               Initialize Grid Uplink
             </motion.p>
 
-            {/* Progress bar */}
-            <div className="mt-10 w-64 h-[2px] bg-cyan-neon/10 relative overflow-hidden rounded-full">
+            <div className="mt-8 w-56 h-[2px] bg-cyan-neon/10 relative overflow-hidden rounded-full">
               <motion.div
                 className="absolute inset-y-0 left-0 bg-gradient-to-r from-electric-blue via-cyan-neon to-cyan-neon rounded-full"
                 style={{
                   width: `${progress}%`,
                   boxShadow: "0 0 12px #00F0FF, 0 0 24px rgba(0,240,255,0.5)",
+                  transition: "width 0.08s linear",
                 }}
               />
             </div>
-            <motion.span
-              className="mt-3 font-mono text-[10px] tracking-widest text-cyan-neon/50"
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-            >
+            <span className="mt-2 font-mono text-[10px] tracking-widest text-cyan-neon/50">
               {progress < 100 ? `SYNC ${Math.floor(progress)}%` : "LINK ESTABLISHED"}
-            </motion.span>
+            </span>
           </motion.div>
 
-          {/* Energy surge flash */}
           {phase >= 3 && (
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.9, 0.3, 0] }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-              style={{
-                background:
-                  "radial-gradient(circle at center, rgba(0,240,255,0.5) 0%, rgba(0,136,255,0.2) 40%, transparent 70%)",
-              }}
-            />
-          )}
-
-          {/* Expanding ring surge */}
-          {phase >= 3 && (
-            <motion.div
-              className="absolute rounded-full border border-cyan-neon"
-              initial={{ width: 40, height: 40, opacity: 1 }}
-              animate={{ width: 1200, height: 1200, opacity: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              style={{ boxShadow: "0 0 40px #00F0FF" }}
-            />
+            <>
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.7, 0] }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                style={{
+                  background:
+                    "radial-gradient(circle at center, rgba(0,240,255,0.45) 0%, rgba(0,136,255,0.15) 40%, transparent 70%)",
+                }}
+              />
+              <motion.div
+                className="absolute rounded-full border border-cyan-neon"
+                initial={{ width: 40, height: 40, opacity: 0.9 }}
+                animate={{ width: 900, height: 900, opacity: 0 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                style={{ boxShadow: "0 0 40px #00F0FF" }}
+              />
+            </>
           )}
         </motion.div>
       )}

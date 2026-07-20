@@ -51,7 +51,7 @@ function StatCard({
       className="glass-panel relative px-5 py-4 rounded-xl text-center"
       initial={{ opacity: 0, y: 20 }}
       animate={active ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: 0.3 + index * 0.1 }}
+      transition={{ delay: 0.1 + index * 0.05, duration: 0.35 }}
     >
       <span className="circuit-corner tl" />
       <span className="circuit-corner br" />
@@ -81,7 +81,7 @@ function NetworkCanvas({ active }: { active: boolean }) {
 
       // Nodes on sphere
       const nodes: { x: number; y: number; z: number; px: number; py: number }[] = [];
-      const N = 48;
+      const N = 36;
       const rotY = t * 0.15 + mouse.current.x * 0.5;
       const rotX = 0.3 + mouse.current.y * 0.3;
 
@@ -304,7 +304,7 @@ export default function CommandLattice() {
           className="mb-12 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.45 }}
         >
           <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-cyan-neon/60 uppercase mb-3">
             // Live Command Lattice
@@ -320,7 +320,7 @@ export default function CommandLattice() {
           className="glass-panel-intense relative rounded-2xl overflow-hidden"
           initial={{ opacity: 0, scale: 0.96 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.9, delay: 0.15 }}
+          transition={{ duration: 0.45, delay: 0.06 }}
         >
           <span className="circuit-corner tl" />
           <span className="circuit-corner tr" />

@@ -37,7 +37,7 @@ export default function Architecture() {
           className="mb-14 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.45 }}
         >
           <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-cyan-neon/60 uppercase mb-3">
             // System Architecture
@@ -72,7 +72,7 @@ export default function Architecture() {
                 }`}
                 initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.15 + i * 0.12 }}
+                transition={{ duration: 0.4, delay: 0.06 + i * 0.06 }}
                 data-cursor="hover"
               >
                 <span className="circuit-corner tl" />

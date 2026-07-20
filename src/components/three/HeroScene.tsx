@@ -138,7 +138,7 @@ function ShieldCore({ mouse }: { mouse: React.MutableRefObject<{ x: number; y: n
 
 /* ── Incoming threats that vaporize ── */
 function ThreatParticles({ mouse }: { mouse: React.MutableRefObject<{ x: number; y: number }> }) {
-  const count = 30;
+  const count = 18;
   const mesh = useRef<THREE.InstancedMesh>(null);
   const data = useMemo(() => {
     return Array.from({ length: count }).map(() => ({
@@ -315,12 +315,12 @@ function Scene() {
       {!isMobile && <DataTowers />}
 
       <Sparkles
-        count={isMobile ? 40 : 100}
+        count={isMobile ? 24 : 55}
         scale={10}
-        size={1.5}
-        speed={0.3}
+        size={1.4}
+        speed={0.4}
         color="#00F0FF"
-        opacity={0.5}
+        opacity={0.45}
       />
 
       {/* Ground plane glow */}

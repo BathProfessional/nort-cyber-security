@@ -21,11 +21,11 @@ export default function HomePage() {
       {!loaded && <LoadingSequence onComplete={onLoadComplete} />}
 
       <div
-        className={`relative min-h-screen transition-opacity duration-700 ${
+        className={`relative min-h-screen transition-opacity duration-300 ease-out ${
           loaded ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       >
-        <CustomCursor />
+        {loaded && <CustomCursor />}
         <AmbientEffects />
         <div className="scanlines" aria-hidden />
 

@@ -20,6 +20,14 @@
 html {
   scroll-behavior: smooth;
   background: #000;
+  scroll-padding-top: 5rem;
+}
+
+/* Faster, smoother scrolling feel on supporting browsers */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -206,7 +214,7 @@ body {
   box-shadow: 0 0 8px #00f0ff;
   transform: scaleX(0);
   transform-origin: center;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .nav-link:hover::after,
 .nav-link.active::after {
@@ -232,7 +240,7 @@ body {
     transparent 80%
   );
   transform: translateX(-120%);
-  transition: transform 0.6s ease;
+  transition: transform 0.35s ease;
   z-index: 1;
   pointer-events: none;
 }
@@ -249,7 +257,7 @@ body {
     0 0 20px rgba(0, 240, 255, 0.5),
     0 0 40px rgba(0, 136, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  transition: all 0.3s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 .btn-primary:hover {
   box-shadow:
@@ -269,7 +277,7 @@ body {
   box-shadow:
     0 0 15px rgba(0, 240, 255, 0.2),
     inset 0 0 20px rgba(0, 240, 255, 0.05);
-  transition: all 0.3s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 .btn-secondary:hover {
   background: rgba(0, 240, 255, 0.08);
@@ -337,7 +345,9 @@ body {
 
 /* Service card hover bloom */
 .service-card {
-  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease, border-color 0.22s ease;
+  will-change: transform;
 }
 .service-card:hover {
   border-color: rgba(0, 240, 255, 0.7);
@@ -347,7 +357,7 @@ body {
     0 16px 48px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(0, 240, 255, 0.35),
     inset 0 0 60px rgba(0, 240, 255, 0.06);
-  transform: translateY(-6px) scale(1.01);
+  transform: translateY(-4px) scale(1.005);
 }
 
 /* Circuit corner accents */
