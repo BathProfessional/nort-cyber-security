@@ -8,7 +8,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
  * Matrix digital rain + pure Tron neon blue aesthetic.
- * Cascading code in cyan/electric blue with grid floor, horizon glow, HUD.
+ * NO GREEN — cyan #00F0FF / electric blue #0088FF only.
+ * Build: tron-blue-v2
  */
 export default function Hero() {
   const { normalized } = useMousePosition();

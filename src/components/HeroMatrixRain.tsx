@@ -4,8 +4,9 @@ import { useEffect, useRef } from "react";
 import { useIsMobile } from "@/hooks/useMousePosition";
 
 /**
- * Matrix-style digital rain in Tron neon cyan / electric blue.
- * Dense cascading code that matches the rest of the Nort Cyber Security Grid.
+ * Matrix-style digital rain — TRON NEON BLUE ONLY (no green).
+ * Colors: #00F0FF cyan · #0088FF electric blue · #E0F7FF head
+ * Build: tron-blue-v2
  */
 export default function HeroMatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -59,7 +60,7 @@ export default function HeroMatrixRain() {
           speed: 0.5 + Math.random() * 1.25,
           len,
           chars: Array.from({ length: len }, randChar),
-          blue: Math.random() > 0.78,
+          blue: Math.random() > 0.55,
         };
       });
 
